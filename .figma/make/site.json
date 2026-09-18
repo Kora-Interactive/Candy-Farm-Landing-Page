@@ -1,0 +1,10 @@
+{
+  "description": "Engage fans of casual mobile games with a vibrant landing page that showcases Candy Farm, collects beta signups, and connects players to community channels.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

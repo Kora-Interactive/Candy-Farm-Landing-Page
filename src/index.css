@@ -1,0 +1,427 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-nunito: 'Nunito', sans-serif;
+  --font-fredoka: 'Fredoka', sans-serif;
+
+  --color-candy-pink: #FF6B9D;
+  --color-candy-pink-light: #FFB3D1;
+  --color-candy-mint: #3DD6C8;
+  --color-candy-mint-light: #A8EDE8;
+  --color-candy-yellow: #FFD93D;
+  --color-candy-yellow-dark: #F5A623;
+  --color-candy-lavender: #C77DFF;
+  --color-candy-lavender-light: #E8C8FF;
+  --color-candy-orange: #FF8C42;
+  --color-candy-orange-dark: #E06920;
+  --color-candy-red: #E63946;
+  --color-candy-green: #4CAF50;
+  --color-sky-top: #6DCFE8;
+  --color-sky-bottom: #B8EEF4;
+}
+
+* {
+  font-family: 'Nunito', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.candy-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.candy-title-gradient {
+  color: #FFE45C;
+  background: linear-gradient(180deg, #FFF8B0 0%, #FFE45C 42%, #F28C28 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 0 #A94725) drop-shadow(0 7px 10px rgba(0, 0, 0, .28));
+}
+
+.candy-wordmark {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-shadow: 0 2px 0 #A94725, 0 4px 12px rgba(0, 0, 0, .3);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #25CFE5;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glossy button effect */
+.btn-candy {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-candy::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Floating animation for mascot */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.float-anim {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes shooter-float {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(1deg);
+  }
+
+  50% {
+    transform: translate3d(-12px, -18px, 0) rotate(-2deg);
+  }
+}
+
+.shooter-float {
+  animation: shooter-float 4.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes map-pulse {
+
+  0%,
+  100% {
+    filter: saturate(1.08) brightness(1);
+    transform: scale(1);
+  }
+
+  50% {
+    filter: saturate(1.28) brightness(1.1);
+    transform: scale(1.018);
+  }
+}
+
+.map-pulse {
+  animation: map-pulse 8s ease-in-out infinite;
+}
+
+@keyframes signal-pulse {
+
+  0%,
+  100% {
+    opacity: .45;
+    transform: scaleX(.72);
+    transform-origin: right;
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.signal-pulse {
+  animation: signal-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes projectile-one {
+  0% {
+    opacity: 0;
+    transform: translate(-90px, 55px) scale(.4);
+  }
+
+  35%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(120px, -85px) scale(1);
+  }
+}
+
+.projectile-one {
+  animation: projectile-one 2.8s linear infinite;
+}
+
+@keyframes projectile-two {
+  0% {
+    opacity: 0;
+    transform: translate(-100px, 70px) scale(.4);
+  }
+
+  35%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(130px, -90px) scale(1);
+  }
+}
+
+.projectile-two {
+  animation: projectile-two 3.4s .8s linear infinite;
+}
+
+@keyframes hero-copy-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-copy-pop {
+  animation: hero-copy-pop .8s .25s both cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes armory-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .45), 0 0 0 rgba(255, 89, 72, 0);
+  }
+
+  50% {
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .45), 0 0 34px rgba(255, 89, 72, .18);
+  }
+}
+
+.armory-glow {
+  animation: armory-glow 4s ease-in-out infinite;
+}
+
+@keyframes loadout-card {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.loadout-card {
+  animation: loadout-card 3.4s ease-in-out infinite;
+}
+
+.loadout-card:nth-child(2) {
+  animation-delay: .35s;
+}
+
+.loadout-card:nth-child(3) {
+  animation-delay: .7s;
+}
+
+@keyframes community-ring {
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: .7;
+  }
+
+  50% {
+    transform: rotate(18deg) scale(1.08);
+    opacity: 1;
+  }
+}
+
+.community-ring {
+  animation: community-ring 7s ease-in-out infinite;
+}
+
+.butterfly {
+  display: inline-flex;
+  align-items: center;
+  width: 2.6rem;
+  height: 2rem;
+  pointer-events: none;
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, .3));
+  animation: butterfly-hover 2.8s ease-in-out infinite;
+}
+
+.butterfly-wing {
+  display: block;
+  width: 1.1rem;
+  height: 1.55rem;
+  border: 2px solid rgba(255, 255, 255, .55);
+  border-radius: 75% 25% 70% 30%;
+  transform-origin: 100% 50%;
+  animation: butterfly-flap .42s ease-in-out infinite alternate;
+}
+
+.butterfly-wing-left {
+  transform: rotate(28deg);
+}
+
+.butterfly-wing-right {
+  transform: scaleX(-1) rotate(28deg);
+}
+
+.butterfly-body {
+  z-index: 1;
+  width: .3rem;
+  height: 1.1rem;
+  margin: 0 -.05rem;
+  border-radius: 999px;
+  background: #4A211D;
+  box-shadow: 0 0 0 2px rgba(255, 228, 92, .22);
+}
+
+.butterfly-pink .butterfly-wing {
+  background: linear-gradient(135deg, #FF6B9D, #E34232);
+}
+
+.butterfly-gold .butterfly-wing {
+  background: linear-gradient(135deg, #FFE45C, #F28C28);
+}
+
+.butterfly-mint .butterfly-wing {
+  background: linear-gradient(135deg, #72F2E8, #2B9A8F);
+}
+
+@keyframes butterfly-flap {
+  from {
+    transform: rotate(28deg) scaleY(1);
+  }
+
+  to {
+    transform: rotate(28deg) scaleY(.62);
+  }
+}
+
+@keyframes butterfly-hover {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-4deg);
+  }
+
+  35% {
+    transform: translate3d(20px, -16px, 0) rotate(8deg);
+  }
+
+  70% {
+    transform: translate3d(-8px, -30px, 0) rotate(-5deg);
+  }
+}
+
+.butterfly-one {
+  animation-duration: 6s;
+}
+
+.butterfly-two {
+  animation-duration: 7.5s;
+  animation-delay: -2s;
+}
+
+.butterfly-three {
+  animation-duration: 5.5s;
+  animation-delay: -1s;
+}
+
+.butterfly-four {
+  animation-duration: 6.5s;
+  animation-delay: -3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Bounce for stars/sparkles */
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(-6deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(6deg) scale(1.1);
+  }
+}
+
+.wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* Candy stripe pattern */
+.candy-stripe {
+  background: repeating-linear-gradient(-45deg,
+      rgba(255, 255, 255, 0.15) 0px,
+      rgba(255, 255, 255, 0.15) 8px,
+      transparent 8px,
+      transparent 16px);
+}
+
+/* Grass wave at bottom of hero */
+.grass-clip {
+  clip-path: ellipse(60% 50% at 50% 100%);
+}
+
+@keyframes scroll-hint {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.scroll-hint {
+  animation: scroll-hint 1.2s ease-in-out infinite alternate;
+}
