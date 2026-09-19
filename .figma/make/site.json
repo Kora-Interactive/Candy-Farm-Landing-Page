@@ -1,5 +1,9 @@
 {
+  "title": "Candy Farm Development",
   "description": "Engage fans of casual mobile games with a vibrant landing page that showcases Candy Farm, collects beta signups, and connects players to community channels.",
+  "icons": {
+    "icon": "/favicon.png"
+  },
   "robots": {
     "index": false
   },

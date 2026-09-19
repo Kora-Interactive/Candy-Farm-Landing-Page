@@ -135,7 +135,7 @@ body {
 }
 
 .map-pulse {
-  animation: map-pulse 8s ease-in-out infinite;
+  filter: saturate(1.12) brightness(1.04);
 }
 
 @keyframes signal-pulse {
@@ -366,6 +366,24 @@ body {
 .butterfly-four {
   animation-duration: 6.5s;
   animation-delay: -3s;
+}
+
+#how-it-works,
+#gameplay,
+#community {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 900px;
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: 767px) {
+  .map-pulse {
+    filter: saturate(1.08) brightness(1.02);
+  }
+
+  .butterfly-three,
+  .butterfly-four {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

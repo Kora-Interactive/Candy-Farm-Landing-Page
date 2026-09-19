@@ -11,12 +11,13 @@ import screenshotC from './assets/asset4.png'   // gameplay catching
 import screenshotD from './assets/asset6.png'   // store screen
 import screenshotE from './assets/asset10.png'  // gameplay 2
 
-const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
+const PLAYTEST_URL = 'https://play.google.com/store/apps/details?id=com.Precious.CandyFarmas'
+const SIGNUP_ENDPOINT = import.meta.env.VITE_GOOGLE_SHEETS_ENDPOINT || '/api/signups'
 
 async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<void> {
-  const res = await fetch('/api/signups', {
+  const res = await fetch(SIGNUP_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(signup),
   })
   if (!res.ok) throw new Error('Signup could not be saved')
@@ -100,7 +101,7 @@ export default function App() {
           background: '#071B1A',
         }}
       >
-        <img src={worldMap} alt="Candy Farm world map" className="map-pulse absolute inset-0 h-full w-full object-cover opacity-95" />
+        <img src={worldMap} alt="Candy Farm world map" fetchPriority="high" decoding="async" className="map-pulse absolute inset-0 h-full w-full object-cover opacity-95" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,20,20,0.78)_0%,rgba(5,20,20,0.48)_34%,rgba(5,20,20,0.02)_76%),linear-gradient(0deg,rgba(7,27,26,0.78)_0%,transparent_48%,rgba(4,16,16,0.35)_100%)]" />
         {/* ── HEADER ───────────────────────────────────────────── */}
         <header className="absolute inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-5">
@@ -113,7 +114,7 @@ export default function App() {
               className="flex items-center gap-2 text-white no-underline drop-shadow-sm"
               aria-label="Candy Farm home"
             >
-              <img src={logoSplash} alt="Candy Farm" className="h-10 w-10 object-contain drop-shadow-sm" />
+              <img src={logoSplash} alt="Candy Farm" fetchPriority="high" decoding="async" className="h-10 w-10 object-contain drop-shadow-sm" />
               <span className="candy-wordmark hidden text-base sm:inline sm:text-lg">
                 Candy Farm
               </span>
@@ -156,6 +157,8 @@ export default function App() {
               <img
                 src={logoSplash}
                 alt="Candy Farm - official game logo with gummy bear mascot"
+                fetchPriority="high"
+                decoding="async"
                 className="w-full drop-shadow-2xl"
                 style={{ filter: 'drop-shadow(0 16px 32px rgba(0,0,0,0.65))' }}
               />
@@ -395,7 +398,7 @@ export default function App() {
               { src: orangeShooter, name: 'Blazebite', color: '#F28C28', detail: 'Area burst' },
             ].map(({ src, name, color, detail }) => (
               <div key={name} className="loadout-card group relative flex min-h-52 flex-col items-center justify-end overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#315451] to-[#101D25] pt-2 transition-transform hover:-translate-y-1">
-                <img src={src} alt={`${name} candy shooter`} className="h-40 w-full object-contain drop-shadow-[0_12px_12px_rgba(0,0,0,0.7)] sm:h-52" />
+                <img src={src} alt={`${name} candy shooter`} loading="lazy" decoding="async" className="h-40 w-full object-contain drop-shadow-[0_12px_12px_rgba(0,0,0,0.7)] sm:h-52" />
                 <div className="relative z-10 w-full border-t px-3 py-2" style={{ borderColor: `${color}88` }}>
                   <p className="candy-title text-xs uppercase text-white sm:text-sm">{name}</p>
                   <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>{detail}</p>
@@ -457,6 +460,8 @@ export default function App() {
               <img
                 src={src}
                 alt={`Candy Farm gameplay screenshot ${i + 1}`}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -593,7 +598,7 @@ export default function App() {
         <div className="mx-auto max-w-5xl">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <img src={logoSplash} alt="Candy Farm" className="h-14 w-14 object-contain" />
+              <img src={logoSplash} alt="Candy Farm" loading="lazy" decoding="async" className="h-14 w-14 object-contain" />
               <div>
                 <p className="candy-wordmark text-xl uppercase text-white">Candy Farm</p>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#7E9B99]">by Kora Interactive</p>
