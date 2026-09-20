@@ -19,7 +19,8 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(signup),
   })
-  if (!res.ok) throw new Error('Signup could not be saved')
+  const result = await res.json().catch(() => null)
+  if (!res.ok || result?.ok === false) throw new Error(result?.error || 'Signup could not be saved')
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
@@ -72,6 +73,7 @@ export default function App() {
     try {
       await saveSignup({ name, email, phone, country })
       setSubmitState('success')
+      window.setTimeout(() => window.location.assign(PLAYTEST_URL), 700)
     } catch {
       setSubmitState('error')
     }
@@ -260,20 +262,6 @@ export default function App() {
                 )}
               </form>
             )}
-            <a
-              href={PLAYTEST_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-white/40 bg-[#173D38]/80 px-4 py-3 text-sm font-bold text-white shadow-[0_4px_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
-                <path fill="#34A853" d="M2.7 3.3a2 2 0 0 0-.7 1.6v14.2a2 2 0 0 0 .7 1.6L13.1 12 2.7 3.3Z" />
-                <path fill="#FBBC04" d="m13.1 12 3.1-3.1 4.1 2.3c1.2.7 1.2 1.9 0 2.6l-4.1 2.3-3.1-3.1Z" />
-                <path fill="#4285F4" d="m2.7 20.7 10.4-8.7 3.1 3.1-10.5 5.8c-1.2.7-2.4.5-3-.2Z" />
-                <path fill="#EA4335" d="m2.7 3.3 10.4 8.7 3.1-3.1L5.7 3.1c-1.2-.7-2.4-.5-3 .2Z" />
-              </svg>
-              Open the Android Playtest
-            </a>
           </div>
         </div>
 
@@ -560,27 +548,6 @@ export default function App() {
                 Join our Telegram Group
               </a>
 
-              <a
-                href={PLAYTEST_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-candy flex items-center justify-center gap-3 rounded-xl border border-[#FFE45C]/60 py-4 font-900 text-base text-[#3A1F00] transition-transform active:scale-95 sm:col-span-2 lg:col-span-1"
-                style={{
-                  fontWeight: 900,
-                  background: 'linear-gradient(180deg, #FFF08A 0%, #F2B632 100%)',
-                  boxShadow: '0 6px 0 #A76B14, 0 8px 24px rgba(242,182,50,0.35)',
-                  textDecoration: 'none',
-                  letterSpacing: '0.01em',
-                }}
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5">
-                  <path fill="#34A853" d="M2.7 3.3a2 2 0 0 0-.7 1.6v14.2a2 2 0 0 0 .7 1.6L13.1 12 2.7 3.3Z" />
-                  <path fill="#EA4335" d="m2.7 3.3 10.4 8.7 3.1-3.1L5.7 3.1c-1.2-.7-2.4-.5-3 .2Z" />
-                  <path fill="#4285F4" d="m2.7 20.7 10.4-8.7 3.1 3.1-10.5 5.8c-1.2.7-2.4.5-3-.2Z" />
-                  <path fill="#FBBC04" d="m13.1 12 3.1-3.1 4.1 2.3c1.2.7 1.2 1.9 0 2.6l-4.1 2.3-3.1-3.1Z" />
-                </svg>
-                Join the Android Playtest
-              </a>
             </div>
           </div>
           <div className="mt-14 flex items-center gap-4 border-t border-white/10 pt-6">
