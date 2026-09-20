@@ -12,11 +12,12 @@ import screenshotD from './assets/asset6.png'   // store screen
 import screenshotE from './assets/asset10.png'  // gameplay 2
 
 const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
+const SIGNUP_ENDPOINT = import.meta.env.VITE_GOOGLE_SHEETS_ENDPOINT || '/api/signups'
 
 async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<void> {
-  const res = await fetch('/api/signups', {
+  const res = await fetch(SIGNUP_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(signup),
   })
   const result = await res.json().catch(() => null)
