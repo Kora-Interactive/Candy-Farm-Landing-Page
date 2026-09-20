@@ -11,13 +11,12 @@ import screenshotC from './assets/asset4.png'   // gameplay catching
 import screenshotD from './assets/asset6.png'   // store screen
 import screenshotE from './assets/asset10.png'  // gameplay 2
 
-const PLAYTEST_URL = 'https://play.google.com/store/apps/details?id=com.Precious.CandyFarmas'
-const SIGNUP_ENDPOINT = import.meta.env.VITE_GOOGLE_SHEETS_ENDPOINT || '/api/signups'
+const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
 
 async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<void> {
-  const res = await fetch(SIGNUP_ENDPOINT, {
+  const res = await fetch('/api/signups', {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(signup),
   })
   if (!res.ok) throw new Error('Signup could not be saved')
@@ -101,7 +100,7 @@ export default function App() {
           background: '#071B1A',
         }}
       >
-        <img src={worldMap} alt="Candy Farm world map" fetchPriority="high" decoding="async" className="map-pulse absolute inset-0 h-full w-full object-cover opacity-95" />
+        <img src={worldMap} alt="Candy Farm world map" fetchPriority="high" decoding="async" className="map-pulse absolute inset-0 h-full w-full object-cover opacity-95" onError={event => { event.currentTarget.style.display = 'none' }} />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,20,20,0.78)_0%,rgba(5,20,20,0.48)_34%,rgba(5,20,20,0.02)_76%),linear-gradient(0deg,rgba(7,27,26,0.78)_0%,transparent_48%,rgba(4,16,16,0.35)_100%)]" />
         {/* ── HEADER ───────────────────────────────────────────── */}
         <header className="absolute inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-5">
@@ -142,7 +141,7 @@ export default function App() {
 
         <div className="absolute right-[28%] top-[38%] z-10 hidden h-4 w-4 rounded-full bg-[#FFE45C] shadow-[0_0_22px_8px_rgba(255,228,92,0.75)] projectile-one lg:block" />
         <div className="absolute right-[18%] top-[45%] z-10 hidden h-3 w-3 rounded-full bg-[#FF5948] shadow-[0_0_20px_7px_rgba(255,89,72,0.75)] projectile-two lg:block" />
-        <img src={redShooter} alt="Candy Farm skull shooter" className="shooter-float absolute -right-20 bottom-[-30px] z-10 hidden h-[78vh] max-h-[720px] w-auto object-contain opacity-95 drop-shadow-[0_20px_30px_rgba(0,0,0,0.7)] lg:block" />
+        <img src={redShooter} alt="Candy Farm skull shooter" loading="eager" decoding="async" className="shooter-float absolute -right-20 bottom-[-10px] z-10 block h-[42vh] max-h-[430px] w-auto object-contain opacity-80 drop-shadow-[0_20px_30px_rgba(0,0,0,0.7)] sm:h-[56vh] sm:max-h-[560px] lg:bottom-[-30px] lg:h-[78vh] lg:max-h-[720px] lg:opacity-95" />
         <Butterfly color="gold" className="butterfly-one absolute left-[14%] top-[30%] z-10" />
         <Butterfly color="pink" className="butterfly-two absolute right-[36%] top-[22%] z-10" />
         <Butterfly color="mint" className="butterfly-three absolute left-[44%] top-[58%] z-10" />
@@ -159,7 +158,7 @@ export default function App() {
                 alt="Candy Farm - official game logo with gummy bear mascot"
                 fetchPriority="high"
                 decoding="async"
-                className="w-full drop-shadow-2xl"
+                className="w-full min-w-0 drop-shadow-2xl"
                 style={{ filter: 'drop-shadow(0 16px 32px rgba(0,0,0,0.65))' }}
               />
             </div>
@@ -520,7 +519,7 @@ export default function App() {
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <a
-                href="https://chat.whatsapp.com/"
+                href="https://chat.whatsapp.com/ETDLGETaVmN1xHYIibTfV6?s=sh&p=a&mlu=0&ilr=4"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-candy flex items-center justify-center gap-3 rounded-xl border border-[#5AF18A]/50 py-4 font-900 text-base transition-transform active:scale-95"
@@ -541,7 +540,7 @@ export default function App() {
               </a>
 
               <a
-                href="https://t.me/"
+                href="https://t.me/+eRNrjmhzDrhhMGRk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-candy flex items-center justify-center gap-3 rounded-xl border border-[#55C9FF]/50 py-4 font-900 text-base transition-transform active:scale-95"
