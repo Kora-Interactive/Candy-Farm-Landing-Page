@@ -39,11 +39,20 @@ function doPost(event) {
 }
 
 function addToTesterGroup(email) {
-  const group = GroupsApp.getGroupByEmail(TESTER_GROUP_EMAIL)
-  const alreadyMember = group.getUsers().some(user => user.getEmail().toLowerCase() === email.toLowerCase())
-  if (alreadyMember) return true
-  group.addMember(email)
-  return group.getUsers().some(user => user.getEmail().toLowerCase() === email.toLowerCase())
+  try {
+    AdminDirectory.Members.get(TESTER_GROUP_EMAIL, email)
+    return true
+  } catch (error) {
+    if (!String(error).includes('Not Found')) throw error
+  }
+
+  AdminDirectory.Members.insert({
+    email: email,
+    role: 'MEMBER',
+    delivery_settings: 'ALL_MAIL',
+  }, TESTER_GROUP_EMAIL)
+
+  return true
 }
 
 function doGet() {
