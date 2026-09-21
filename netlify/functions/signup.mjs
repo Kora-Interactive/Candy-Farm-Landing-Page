@@ -33,7 +33,13 @@ export default async function handler(request) {
         try {
             result = JSON.parse(text)
         } catch {
-            result = { ok: response.ok, error: text || 'Google Sheets returned an invalid response' }
+            const isHtml = /^\s*<!doctype html|^\s*<html/i.test(text)
+            result = {
+                ok: false,
+                error: isHtml
+                    ? 'Google Apps Script returned an HTML error page. GOOGLE_SHEETS_ENDPOINT must be the deployed Web App URL ending in /exec.'
+                    : text || 'Google Sheets returned an invalid response',
+            }
         }
 
         return new Response(JSON.stringify(result), {
