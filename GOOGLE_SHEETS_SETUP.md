@@ -21,12 +21,12 @@ The first request creates a `Signups` tab with these columns:
 
 ## 3. Connect the frontend
 
-For local development, create a `.env.local` file in the project root:
+In Netlify, add this server-side environment variable under **Site configuration > Environment variables**:
 
 ```env
-VITE_GOOGLE_SHEETS_ENDPOINT=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+GOOGLE_SHEETS_ENDPOINT=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
 ```
 
-In Netlify, add the same value under **Site configuration > Environment variables**, then redeploy.
+Then redeploy. The browser posts to `/api/signups`; Netlify forwards it to Apps Script without a browser CORS request.
 
 The value must be the deployed `/exec` URL, not the Apps Script editor URL.
