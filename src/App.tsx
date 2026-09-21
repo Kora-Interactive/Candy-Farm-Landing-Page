@@ -15,7 +15,7 @@ const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFar
 const TESTER_GROUP_URL = 'https://groups.google.com/g/candy-farm-closed-test'
 const SIGNUP_ENDPOINT = '/api/signups'
 
-async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number; groupAdded: boolean }> {
+async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number }> {
   const res = await fetch(SIGNUP_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -26,7 +26,7 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
   if (!Number.isInteger(result?.row) || result.row < 2) {
     throw new Error('Google Sheets did not confirm that the signup was written. Redeploy the Apps Script Web App.')
   }
-  return { row: result.row, groupAdded: result.groupAdded === true }
+  return { row: result.row }
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
