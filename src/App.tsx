@@ -14,7 +14,7 @@ import screenshotE from './assets/asset10.png'  // gameplay 2
 const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
 const SIGNUP_ENDPOINT = '/api/signups'
 
-async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number }> {
+async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number; groupAdded: boolean }> {
   const res = await fetch(SIGNUP_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -25,7 +25,10 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
   if (!Number.isInteger(result?.row) || result.row < 2) {
     throw new Error('Google Sheets did not confirm that the signup was written. Redeploy the Apps Script Web App.')
   }
-  return { row: result.row }
+  if (result.groupAdded !== true) {
+    throw new Error('Your signup was saved, but your tester-group membership was not confirmed. Please check the Google Group settings.')
+  }
+  return { row: result.row, groupAdded: true }
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
@@ -67,6 +70,7 @@ export default function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [country, setCountry] = useState('')
+  const [groupConsent, setGroupConsent] = useState(false)
   const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [submitError, setSubmitError] = useState('')
   const [carouselIdx, setCarouselIdx] = useState(0)
@@ -74,7 +78,7 @@ export default function App() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name || !email || !phone || !country) return
+    if (!name || !email || !phone || !country || !groupConsent) return
     setSubmitState('loading')
     setSubmitError('')
     try {
@@ -251,6 +255,16 @@ export default function App() {
                   className="w-full rounded-2xl px-4 py-3 text-sm font-700 outline-none border-2 border-transparent focus:border-white/60 transition-colors"
                   style={{ fontWeight: 700, background: 'rgba(255,255,255,0.92)', color: '#3A1F00' }}
                 />
+                <label className="flex items-start gap-2 text-left text-xs font-semibold text-white/90">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={groupConsent}
+                    onChange={event => setGroupConsent(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 accent-[#FFE45C]"
+                  />
+                  <span>I agree to join the Candy Farm closed-testing Google Group with this email.</span>
+                </label>
                 <button
                   type="submit"
                   disabled={submitState === 'loading'}

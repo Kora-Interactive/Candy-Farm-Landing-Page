@@ -15,7 +15,7 @@
 4. Set **Who has access** to **Anyone**.
 5. Deploy and copy the generated `/exec` URL.
 
-After changing `Code.gs`, use **Deploy > Manage deployments**, edit the Web App deployment, select **New version**, and deploy again. Saving the script editor does not update the live `/exec` deployment.
+After changing `Code.gs`, use **Deploy > Manage deployments**, edit the Web App deployment, select **New version**, and deploy again. Saving the script editor does not update the live `/exec` deployment. After adding `GroupsApp`, approve the new authorization request.
 
 Open the `/exec` URL in a browser. It should return JSON containing:
 
@@ -28,6 +28,8 @@ If the spreadsheet name is `null` or unexpected, the Apps Script is not bound to
 The first request creates a `Signups` tab with these columns:
 
 `Signed Up | Name | Email | Phone number | Country`
+
+The script also adds consenting signup emails to `candy-farm-closed-test@googlegroups.com`. The Google account that owns/runs this Apps Script must be an owner or manager of that Google Group, and the group must allow that account to add members.
 
 ## 3. Connect the frontend
 

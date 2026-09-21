@@ -1,4 +1,5 @@
 const SHEET_NAME = 'Signups'
+const TESTER_GROUP_EMAIL = 'candy-farm-closed-test@googlegroups.com'
 
 function doPost(event) {
   try {
@@ -27,13 +28,21 @@ function doPost(event) {
         signup.country,
       ])
       SpreadsheetApp.flush()
-      return jsonResponse({ ok: true, sheet: sheet.getName(), row: sheet.getLastRow() })
+      const groupAdded = addToTesterGroup(signup.email)
+      return jsonResponse({ ok: true, sheet: sheet.getName(), row: sheet.getLastRow(), groupAdded })
     } finally {
       lock.releaseLock()
     }
   } catch (error) {
     return jsonResponse({ ok: false, error: error.message })
   }
+}
+
+function addToTesterGroup(email) {
+  const group = GroupsApp.getGroupByEmail(TESTER_GROUP_EMAIL)
+  if (group.hasMember(email)) return true
+  group.addMember(email)
+  return group.hasMember(email)
 }
 
 function doGet() {
@@ -45,6 +54,7 @@ function doGet() {
     spreadsheet: spreadsheet ? spreadsheet.getName() : null,
     sheet: sheet ? sheet.getName() : SHEET_NAME,
     rows: sheet ? sheet.getLastRow() : 0,
+    testerGroup: TESTER_GROUP_EMAIL,
   })
 }
 
