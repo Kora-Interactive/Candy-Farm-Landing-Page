@@ -14,7 +14,7 @@ import screenshotE from './assets/asset10.png'  // gameplay 2
 const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
 const SIGNUP_ENDPOINT = '/api/signups'
 
-async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<void> {
+async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number }> {
   const res = await fetch(SIGNUP_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -22,6 +22,10 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
   })
   const result = await res.json().catch(() => null)
   if (!res.ok || result?.ok === false) throw new Error(result?.error || `Signup request failed (${res.status})`)
+  if (!Number.isInteger(result?.row) || result.row < 2) {
+    throw new Error('Google Sheets did not confirm that the signup was written. Redeploy the Apps Script Web App.')
+  }
+  return { row: result.row }
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
