@@ -21,7 +21,7 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
     body: JSON.stringify(signup),
   })
   const result = await res.json().catch(() => null)
-  if (!res.ok || result?.ok === false) throw new Error(result?.error || 'Signup could not be saved')
+  if (!res.ok || result?.ok === false) throw new Error(result?.error || `Signup request failed (${res.status})`)
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
@@ -64,6 +64,7 @@ export default function App() {
   const [phone, setPhone] = useState('')
   const [country, setCountry] = useState('')
   const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [submitError, setSubmitError] = useState('')
   const [carouselIdx, setCarouselIdx] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
 
@@ -71,12 +72,15 @@ export default function App() {
     e.preventDefault()
     if (!name || !email || !phone || !country) return
     setSubmitState('loading')
+    setSubmitError('')
     try {
       await saveSignup({ name, email, phone, country })
       setSubmitState('success')
       window.setTimeout(() => window.location.assign(PLAYTEST_URL), 700)
-    } catch {
+    } catch (error) {
       setSubmitState('error')
+      setSubmitError(error instanceof Error ? error.message : 'Signup could not be saved')
+      console.error('Candy Farm signup failed:', error)
     }
   }
 
@@ -259,7 +263,7 @@ export default function App() {
                   {submitState === 'loading' ? '🍬 Saving...' : '🚀 Join the Closed Beta'}
                 </button>
                 {submitState === 'error' && (
-                  <p className="text-white text-xs text-center">Oops! Try again in a moment.</p>
+                  <p className="text-white text-xs text-center">{submitError || 'Oops! Try again in a moment.'}</p>
                 )}
               </form>
             )}

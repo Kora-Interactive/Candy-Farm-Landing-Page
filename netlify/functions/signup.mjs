@@ -6,9 +6,9 @@ export default async function handler(request) {
         })
     }
 
-    const endpoint = process.env.GOOGLE_SHEETS_ENDPOINT
+    const endpoint = process.env.GOOGLE_SHEETS_ENDPOINT?.trim()
     if (!endpoint) {
-        return new Response(JSON.stringify({ ok: false, error: 'Google Sheets endpoint is not configured' }), {
+        return new Response(JSON.stringify({ ok: false, error: 'Google Sheets endpoint is not configured in Netlify' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
         })
@@ -16,6 +16,12 @@ export default async function handler(request) {
 
     try {
         const payload = await request.json()
+        if (!payload?.name || !payload?.email || !payload?.phone || !payload?.country) {
+            return new Response(JSON.stringify({ ok: false, error: 'Name, email, phone number, and country are required' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' },
+            })
+        }
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -32,7 +38,7 @@ export default async function handler(request) {
 
         return new Response(JSON.stringify(result), {
             status: response.ok && result.ok !== false ? 200 : 502,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
         })
     } catch (error) {
         return new Response(JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'Signup failed' }), {
