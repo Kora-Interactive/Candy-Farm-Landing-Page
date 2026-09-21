@@ -12,6 +12,7 @@ import screenshotD from './assets/asset6.png'   // store screen
 import screenshotE from './assets/asset10.png'  // gameplay 2
 
 const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
+const TESTER_GROUP_URL = 'https://groups.google.com/g/candy-farm-closed-test'
 const SIGNUP_ENDPOINT = '/api/signups'
 
 async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number; groupAdded: boolean }> {
@@ -25,10 +26,7 @@ async function saveSignup(signup: { name: string; email: string; phone: string; 
   if (!Number.isInteger(result?.row) || result.row < 2) {
     throw new Error('Google Sheets did not confirm that the signup was written. Redeploy the Apps Script Web App.')
   }
-  if (result.groupAdded !== true) {
-    throw new Error('Your signup was saved, but your tester-group membership was not confirmed. Please check the Google Group settings.')
-  }
-  return { row: result.row, groupAdded: true }
+  return { row: result.row, groupAdded: result.groupAdded === true }
 }
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
@@ -84,7 +82,6 @@ export default function App() {
     try {
       await saveSignup({ name, email, phone, country })
       setSubmitState('success')
-      window.setTimeout(() => window.location.assign(PLAYTEST_URL), 700)
     } catch (error) {
       setSubmitState('error')
       setSubmitError(error instanceof Error ? error.message : 'Signup could not be saved')
@@ -206,8 +203,13 @@ export default function App() {
             </p>
 
             {submitState === 'success' ? (
-              <div className="bg-white/20 rounded-2xl py-4 px-3 text-white font-800 text-center" style={{ fontWeight: 800 }}>
-                🎉 You're in! Welcome to the farm!
+              <div className="rounded-2xl bg-white/20 px-3 py-4 text-center text-white">
+                <p className="candy-title text-lg">🎉 Your signup is saved!</p>
+                <p className="mt-1 text-xs font-semibold text-white/85">Join the tester group, then open Google Play with the same Google account.</p>
+                <div className="mt-4 grid gap-2">
+                  <a href={TESTER_GROUP_URL} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-white px-3 py-3 text-sm font-black text-[#173D38]">Join the Google tester group</a>
+                  <a href={PLAYTEST_URL} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#FFE45C] px-3 py-3 text-sm font-black text-[#7A3F00]">Open Google Play testing</a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-3">

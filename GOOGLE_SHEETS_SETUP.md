@@ -29,7 +29,7 @@ The first request creates a `Signups` tab with these columns:
 
 `Signed Up | Name | Email | Phone number | Country`
 
-The script also adds consenting signup emails to `candy-farm-closed-test@googlegroups.com` through the Admin Directory advanced service. In Apps Script, open **Services (+)**, add **Admin Directory API**, and approve its authorization request. The account running the script must have permission to manage group members. This API generally requires a Google Workspace administrator account; consumer Gmail groups may not allow programmatic member insertion.
+The script attempts to add consenting signup emails to `candy-farm-closed-test@googlegroups.com` through the Admin Directory advanced service. In Apps Script, open **Services (+)**, add **Admin Directory API**, and approve its authorization request. The account running the script must have permission to manage group members. This API generally requires a Google Workspace administrator account; consumer Gmail groups may not allow programmatic member insertion. If that permission is unavailable, the signup is still saved and the site shows the user a manual group-join link.
 
 ## 3. Connect the frontend
 
