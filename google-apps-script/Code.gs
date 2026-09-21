@@ -40,9 +40,10 @@ function doPost(event) {
 
 function addToTesterGroup(email) {
   const group = GroupsApp.getGroupByEmail(TESTER_GROUP_EMAIL)
-  if (group.hasMember(email)) return true
+  const alreadyMember = group.getUsers().some(user => user.getEmail().toLowerCase() === email.toLowerCase())
+  if (alreadyMember) return true
   group.addMember(email)
-  return group.hasMember(email)
+  return group.getUsers().some(user => user.getEmail().toLowerCase() === email.toLowerCase())
 }
 
 function doGet() {
