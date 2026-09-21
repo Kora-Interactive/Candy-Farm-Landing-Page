@@ -2,6 +2,9 @@ const SHEET_NAME = 'Signups'
 
 function doPost(event) {
   try {
+    if (!event || !event.postData || !event.postData.contents) {
+      throw new Error('No signup payload received by Google Apps Script')
+    }
     const payload = JSON.parse(event.postData.contents)
     const signup = {
       name: cleanValue(payload.name),
@@ -12,24 +15,37 @@ function doPost(event) {
     if (!signup.name || !signup.email || !signup.phone || !signup.country) {
       throw new Error('Name, email, phone number, and country are required')
     }
-    const sheet = getSignupsSheet()
-
-    sheet.appendRow([
-      new Date(),
-      signup.name,
-      signup.email,
-      signup.phone,
-      signup.country,
-    ])
-
-    return jsonResponse({ ok: true })
+    const lock = LockService.getScriptLock()
+    lock.waitLock(10000)
+    try {
+      const sheet = getSignupsSheet()
+      sheet.appendRow([
+        new Date(),
+        signup.name,
+        signup.email,
+        signup.phone,
+        signup.country,
+      ])
+      SpreadsheetApp.flush()
+      return jsonResponse({ ok: true, sheet: sheet.getName(), row: sheet.getLastRow() })
+    } finally {
+      lock.releaseLock()
+    }
   } catch (error) {
     return jsonResponse({ ok: false, error: error.message })
   }
 }
 
 function doGet() {
-  return jsonResponse({ ok: true, service: 'Candy Farm signups' })
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
+  const sheet = spreadsheet && spreadsheet.getSheetByName(SHEET_NAME)
+  return jsonResponse({
+    ok: true,
+    service: 'Candy Farm signups',
+    spreadsheet: spreadsheet ? spreadsheet.getName() : null,
+    sheet: sheet ? sheet.getName() : SHEET_NAME,
+    rows: sheet ? sheet.getLastRow() : 0,
+  })
 }
 
 function getSignupsSheet() {
