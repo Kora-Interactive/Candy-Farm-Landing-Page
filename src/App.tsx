@@ -8,26 +8,10 @@ import orangeShooter from './assets/ChatGPT Image Aug 31, 2025, 03_18_57 PM.png'
 import screenshotA from './assets/asset5.png'   // main menu (farm world)
 import screenshotB from './assets/asset2.png'   // rewards screen
 import screenshotC from './assets/asset4.png'   // gameplay catching
-import screenshotD from './assets/asset6.png'   // store screen
+import screenshotD from './assets/asset6.png'  // store screen
 import screenshotE from './assets/asset10.png'  // gameplay 2
 
-const PLAYTEST_URL = 'https://play.google.com/apps/testing/com.Precious.CandyFarm'
-const TESTER_GROUP_URL = 'https://groups.google.com/g/candy-farm-closed-test'
-const SIGNUP_ENDPOINT = '/api/signups'
-
-async function saveSignup(signup: { name: string; email: string; phone: string; country: string }): Promise<{ row: number }> {
-  const res = await fetch(SIGNUP_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(signup),
-  })
-  const result = await res.json().catch(() => null)
-  if (!res.ok || result?.ok === false) throw new Error(result?.error || `Signup request failed (${res.status})`)
-  if (!Number.isInteger(result?.row) || result.row < 2) {
-    throw new Error('Google Sheets did not confirm that the signup was written. Redeploy the Apps Script Web App.')
-  }
-  return { row: result.row }
-}
+const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.Precious.CandyFarm'
 
 const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screenshotE]
 
@@ -64,30 +48,8 @@ function Butterfly({ className = '', color = 'pink' }: { className?: string; col
 }
 
 export default function App() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [country, setCountry] = useState('')
-  const [groupConsent, setGroupConsent] = useState(false)
-  const [submitState, setSubmitState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [submitError, setSubmitError] = useState('')
   const [carouselIdx, setCarouselIdx] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!name || !email || !phone || !country || !groupConsent) return
-    setSubmitState('loading')
-    setSubmitError('')
-    try {
-      await saveSignup({ name, email, phone, country })
-      setSubmitState('success')
-    } catch (error) {
-      setSubmitState('error')
-      setSubmitError(error instanceof Error ? error.message : 'Signup could not be saved')
-      console.error('Candy Farm signup failed:', error)
-    }
-  }
 
   function scrollCarousel(dir: number) {
     const next = Math.max(0, Math.min(SCREENSHOTS.length - 1, carouselIdx + dir))
@@ -138,11 +100,11 @@ export default function App() {
             </div>
 
             <a
-              href="#signup"
+              href="#download"
               className="candy-wordmark rounded-full bg-candy-yellow px-4 py-2 text-xs text-[#7A3F00] shadow-[0_3px_0_#C07000] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 sm:px-5 sm:text-sm"
               style={{ fontWeight: 900, textDecoration: 'none' }}
             >
-              Join the beta
+              Download now
             </a>
           </nav>
         </header>
@@ -162,7 +124,7 @@ export default function App() {
         <div className="relative z-10 mt-20 w-full max-w-6xl px-5 text-left sm:mt-28 lg:mt-32">
           <div className="max-w-xl">
             <div className="mb-4 inline-flex items-center gap-2 border border-[#F4B942]/70 bg-[#111E1D]/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-[#F4B942]">
-              <span className="h-2 w-2 rounded-full bg-[#E34232] shadow-[0_0_10px_#E34232]" /> Live battle map unlocked
+              <span className="h-2 w-2 rounded-full bg-[#E34232] shadow-[0_0_10px_#E34232]" /> Available on Android
             </div>
             <div className="float-anim w-full max-w-[260px] sm:max-w-[330px]">
               <img
@@ -184,8 +146,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Closed beta signup card */}
-        <div id="signup" className="relative z-20 mt-6 w-full max-w-sm scroll-mt-6 px-4 lg:absolute lg:bottom-8 lg:left-1/2 lg:ml-[-12rem] lg:mt-0">
+        {/* Game download card */}
+        <div id="download" className="relative z-20 mt-6 w-full max-w-sm scroll-mt-6 px-4 lg:absolute lg:bottom-8 lg:left-1/2 lg:ml-[-12rem] lg:mt-0">
           <div
             className="rounded-3xl p-5"
             style={{
@@ -193,100 +155,22 @@ export default function App() {
               boxShadow: '0 14px 38px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.42)',
             }}
           >
-            {/* inner gloss strip */}
             <div className="rounded-t-2xl h-1 mb-3 mx-auto w-3/4 bg-white/25" />
-            <h2 className="candy-title text-white text-lg mb-1">
-              🎮 Join the Closed Beta!
-            </h2>
-            <p className="text-white/85 text-sm mb-4" style={{ fontWeight: 600 }}>
-              Be first to play. Join the farm and we'll add you to the Play Store testing list.
+            <p className="mb-1 text-xs font-black uppercase tracking-[0.2em] text-white/75">Ready to play?</p>
+            <h2 className="candy-title mb-2 text-xl text-white">Download Candy Farm</h2>
+            <p className="mb-4 text-sm text-white/85" style={{ fontWeight: 600 }}>
+              Get the game on your Android device and start protecting the farm.
             </p>
-
-            {submitState === 'success' ? (
-              <div className="rounded-2xl bg-white/20 px-3 py-4 text-center text-white">
-                <p className="candy-title text-lg">🎉 Your signup is saved!</p>
-                <p className="mt-1 text-xs font-semibold text-white/85">Join the tester group, then open Google Play with the same Google account.</p>
-                <div className="mt-4 grid gap-2">
-                  <a href={TESTER_GROUP_URL} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-white px-3 py-3 text-sm font-black text-[#173D38]">Join the Google tester group</a>
-                  <a href={PLAYTEST_URL} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#FFE45C] px-3 py-3 text-sm font-black text-[#7A3F00]">Open Google Play testing</a>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="Your name"
-                  aria-label="Your name"
-                  className="w-full rounded-2xl px-4 py-3 text-sm font-700 outline-none border-2 border-transparent focus:border-white/60 transition-colors"
-                  style={{ fontWeight: 700, background: 'rgba(255,255,255,0.92)', color: '#3A1F00' }}
-                />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Email address"
-                  aria-label="Email address"
-                  className="w-full rounded-2xl px-4 py-3 text-sm font-700 outline-none border-2 border-transparent focus:border-white/60 transition-colors"
-                  style={{
-                    fontWeight: 700,
-                    background: 'rgba(255,255,255,0.92)',
-                    color: '#3A1F00',
-                  }}
-                />
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  placeholder="Phone number"
-                  aria-label="Phone number"
-                  className="w-full rounded-2xl px-4 py-3 text-sm font-700 outline-none border-2 border-transparent focus:border-white/60 transition-colors"
-                  style={{ fontWeight: 700, background: 'rgba(255,255,255,0.92)', color: '#3A1F00' }}
-                />
-                <input
-                  type="text"
-                  required
-                  value={country}
-                  onChange={e => setCountry(e.target.value)}
-                  placeholder="Country"
-                  aria-label="Country"
-                  className="w-full rounded-2xl px-4 py-3 text-sm font-700 outline-none border-2 border-transparent focus:border-white/60 transition-colors"
-                  style={{ fontWeight: 700, background: 'rgba(255,255,255,0.92)', color: '#3A1F00' }}
-                />
-                <label className="flex items-start gap-2 text-left text-xs font-semibold text-white/90">
-                  <input
-                    type="checkbox"
-                    required
-                    checked={groupConsent}
-                    onChange={event => setGroupConsent(event.target.checked)}
-                    className="mt-0.5 h-4 w-4 accent-[#FFE45C]"
-                  />
-                  <span>I agree to join the Candy Farm closed-testing Google Group with this email.</span>
-                </label>
-                <button
-                  type="submit"
-                  disabled={submitState === 'loading'}
-                  className="btn-candy w-full rounded-2xl py-3 font-900 text-base transition-transform active:scale-95"
-                  style={{
-                    fontWeight: 900,
-                    background: 'linear-gradient(180deg, #FFE45C 0%, #F2B632 100%)',
-                    color: '#7A3F00',
-                    boxShadow: '0 6px 0 #C07000, 0 8px 16px rgba(0,0,0,0.2)',
-                    border: 'none',
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {submitState === 'loading' ? '🍬 Saving...' : '🚀 Join the Closed Beta'}
-                </button>
-                {submitState === 'error' && (
-                  <p className="text-white text-xs text-center">{submitError || 'Oops! Try again in a moment.'}</p>
-                )}
-              </form>
-            )}
+            <a
+              href={GOOGLE_PLAY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-candy flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-base font-black text-[#7A3F00] shadow-[0_6px_0_#C07000,0_8px_16px_rgba(0,0,0,0.2)] transition-transform active:scale-95"
+              style={{ background: 'linear-gradient(180deg, #FFE45C 0%, #F2B632 100%)', textDecoration: 'none' }}
+            >
+              <span aria-hidden="true">▶</span>
+              Get it on Google Play
+            </a>
           </div>
         </div>
 
@@ -521,12 +405,12 @@ export default function App() {
                 Join the sweetest<br /><span className="candy-title-gradient">gaming community.</span>
               </h2>
               <p className="mt-5 max-w-lg text-sm font-bold leading-relaxed text-[#C8DCD9] sm:text-base">
-                Get early drops, beta intel, loadout tips, and a front-row seat when the next candy island opens. Rally your squad before launch.
+                Share your adventures, swap loadout tips, and keep up with new candy islands and game updates. Rally your squad and protect the farm together.
               </p>
               <div className="mt-6 flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-widest text-[#F4B942]">
-                <span className="border border-[#F4B942]/40 bg-[#F4B942]/10 px-3 py-2">Beta intel</span>
+                <span className="border border-[#F4B942]/40 bg-[#F4B942]/10 px-3 py-2">Game updates</span>
                 <span className="border border-[#37D5D0]/40 bg-[#37D5D0]/10 px-3 py-2 text-[#72F2E8]">Squad events</span>
-                <span className="border border-[#E34232]/40 bg-[#E34232]/10 px-3 py-2 text-[#FF887D]">Loot drops</span>
+                <span className="border border-[#E34232]/40 bg-[#E34232]/10 px-3 py-2 text-[#FF887D]">Candy drops</span>
               </div>
             </div>
 
@@ -609,7 +493,7 @@ export default function App() {
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {['Privacy Policy', 'Terms of Use', 'Contact'].map(link => <a key={link} href="#" className="transition-colors hover:text-white">{link}</a>)}
             </div>
-            <p>© {new Date().getFullYear()} Kora Interactive · Android beta</p>
+            <p>© {new Date().getFullYear()} Kora Interactive · Candy Farm for Android</p>
           </div>
         </div>
       </footer>
