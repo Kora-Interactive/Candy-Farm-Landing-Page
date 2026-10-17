@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 
 import logoSplash from './assets/Candy Farm Logo2.png'
-import worldMap from './assets/ChatGPT Image Sep 17, 2026, 06_25_31 AM.png'
+import islandAdventure from './assets/candy-farm-island.png'
 import redShooter from './assets/ChatGPT Image Sep 18, 2026, 07_57_00 AM.png'
 import slashShooter from './assets/ChatGPT Image Aug 28, 2025, 04_01_36 AM-Photoroom.png'
 import orangeShooter from './assets/ChatGPT Image Aug 31, 2025, 03_18_57 PM.png'
@@ -18,7 +18,7 @@ const SCREENSHOTS = [screenshotA, screenshotB, screenshotC, screenshotD, screens
 function CarouselDot({ active }: { active: boolean }) {
   return (
     <div
-      className={`rounded-full transition-all duration-300 ${active ? 'w-6 h-3 bg-candy-pink' : 'w-3 h-3 bg-white/50'
+      className={`rounded-full transition-all duration-300 ${active ? 'w-6 h-3 bg-candy-pink' : 'w-3 h-3 bg-[#8bab83]'
         }`}
     />
   )
@@ -60,141 +60,139 @@ export default function App() {
   function onCarouselScroll() {
     if (!carouselRef.current) return
     const el = carouselRef.current
-    const idx = Math.round(el.scrollLeft / (el.clientWidth * 0.72))
-    setCarouselIdx(Math.max(0, Math.min(SCREENSHOTS.length - 1, idx)))
+    const center = el.getBoundingClientRect().left + el.clientWidth / 2
+    const closest = Array.from(el.children).reduce(
+      (best, child, index) => {
+        const bounds = child.getBoundingClientRect()
+        const distance = Math.abs(bounds.left + bounds.width / 2 - center)
+        return distance < best.distance ? { index, distance } : best
+      },
+      { index: 0, distance: Number.POSITIVE_INFINITY },
+    )
+    setCarouselIdx(closest.index)
   }
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Nunito', sans-serif" }}>
 
       {/* ── HERO ─────────────────────────────────────────────── */}
-      <section
-        className="relative min-h-screen flex flex-col items-center text-center overflow-hidden border-b-4 border-[#E34232]"
-        style={{
-          background: '#071B1A',
-        }}
-      >
-        <img src={worldMap} alt="Candy Farm world map" fetchPriority="high" decoding="async" className="map-pulse absolute inset-0 h-full w-full object-cover opacity-95" onError={event => { event.currentTarget.style.display = 'none' }} />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,20,20,0.78)_0%,rgba(5,20,20,0.48)_34%,rgba(5,20,20,0.02)_76%),linear-gradient(0deg,rgba(7,27,26,0.78)_0%,transparent_48%,rgba(4,16,16,0.35)_100%)]" />
-        {/* ── HEADER ───────────────────────────────────────────── */}
-        <header className="absolute inset-x-0 top-0 z-20 px-4 pt-4 sm:px-6 sm:pt-5">
+      <section id="top" className="relative isolate overflow-hidden bg-[#68c9ec]">
+        <img
+          src={islandAdventure}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,61,36,0.82)_0%,rgba(13,75,39,0.66)_35%,rgba(12,64,37,0.15)_73%,transparent_100%),linear-gradient(0deg,rgba(7,47,37,0.58)_0%,transparent_38%,rgba(5,52,78,0.3)_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#073a65]/30 to-transparent" />
+
+        <header className="relative z-20 px-4 pt-4 sm:px-6 sm:pt-6">
           <nav
             aria-label="Main navigation"
-            className="mx-auto flex w-full max-w-6xl items-center justify-between rounded-xl border border-[#F4B942]/55 bg-[#071817]/85 px-4 py-2.5 shadow-[0_8px_26px_rgba(0,0,0,0.45)] backdrop-blur-md sm:px-5"
+            className="mx-auto flex w-full max-w-7xl items-center justify-between rounded-full border border-white/75 bg-white/90 px-4 py-2 shadow-[0_10px_32px_rgba(30,66,64,0.18)] backdrop-blur-md sm:px-6"
           >
-            <a
-              href="#top"
-              className="flex items-center gap-2 text-white no-underline drop-shadow-sm"
-              aria-label="Candy Farm home"
-            >
-              <img src={logoSplash} alt="Candy Farm" fetchPriority="high" decoding="async" className="h-10 w-10 object-contain drop-shadow-sm" />
-              <span className="candy-wordmark hidden text-base sm:inline sm:text-lg">
-                Candy Farm
-              </span>
+            <a href="#top" className="flex items-center gap-2 text-[#28532c] no-underline" aria-label="Candy Farm home">
+              <img src={logoSplash} alt="" fetchPriority="high" decoding="async" className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
+              <span className="candy-wordmark text-lg sm:text-xl">Candy Farm</span>
             </a>
 
-            <div className="hidden items-center gap-6 text-sm font-800 text-[#FFE8B0] md:flex" style={{ fontWeight: 800 }}>
-              <a href="#how-it-works" className="transition-colors hover:text-white">How it works</a>
-              <a href="#gameplay" className="transition-colors hover:text-white">Gameplay</a>
-              <a href="#community" className="transition-colors hover:text-white">Community</a>
+            <div className="hidden items-center gap-8 text-sm font-extrabold text-[#355a36] md:flex">
+              <a href="#how-it-works" className="transition-colors hover:text-[#ec5b55]">The adventure</a>
+              <a href="#gameplay" className="transition-colors hover:text-[#ec5b55]">See the game</a>
+              <a href="#community" className="transition-colors hover:text-[#ec5b55]">Community</a>
             </div>
 
-            <a
-              href="#download"
-              className="candy-wordmark rounded-full bg-candy-yellow px-4 py-2 text-xs text-[#7A3F00] shadow-[0_3px_0_#C07000] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 sm:px-5 sm:text-sm"
-              style={{ fontWeight: 900, textDecoration: 'none' }}
-            >
-              Download now
-            </a>
-          </nav>
-        </header>
-
-        {/* map atmosphere */}
-        <div className="signal-pulse absolute right-0 top-24 hidden h-2 w-32 bg-[#FFE45C] shadow-[0_0_24px_#FFE45C] sm:block" />
-        <div className="signal-pulse absolute left-0 top-36 hidden h-2 w-20 bg-[#FF5948] shadow-[0_0_24px_#FF5948] sm:block" style={{ animationDelay: '0.8s' }} />
-
-        <div className="absolute right-[28%] top-[38%] z-10 hidden h-4 w-4 rounded-full bg-[#FFE45C] shadow-[0_0_22px_8px_rgba(255,228,92,0.75)] projectile-one lg:block" />
-        <div className="absolute right-[18%] top-[45%] z-10 hidden h-3 w-3 rounded-full bg-[#FF5948] shadow-[0_0_20px_7px_rgba(255,89,72,0.75)] projectile-two lg:block" />
-        <img src={redShooter} alt="Candy Farm skull shooter" loading="eager" decoding="async" className="shooter-float absolute -right-20 bottom-[-10px] z-10 block h-[42vh] max-h-[430px] w-auto object-contain opacity-80 drop-shadow-[0_20px_30px_rgba(0,0,0,0.7)] sm:h-[56vh] sm:max-h-[560px] lg:bottom-[-30px] lg:h-[78vh] lg:max-h-[720px] lg:opacity-95" />
-        <Butterfly color="gold" className="butterfly-one absolute left-[14%] top-[30%] z-10" />
-        <Butterfly color="pink" className="butterfly-two absolute right-[36%] top-[22%] z-10" />
-        <Butterfly color="mint" className="butterfly-three absolute left-[44%] top-[58%] z-10" />
-
-        {/* Logo / mascot */}
-        <div className="relative z-10 mt-20 w-full max-w-6xl px-5 text-left sm:mt-28 lg:mt-32">
-          <div className="max-w-xl">
-            <div className="mb-4 inline-flex items-center gap-2 border border-[#F4B942]/70 bg-[#111E1D]/80 px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-[#F4B942]">
-              <span className="h-2 w-2 rounded-full bg-[#E34232] shadow-[0_0_10px_#E34232]" /> Available on Android
-            </div>
-            <div className="float-anim w-full max-w-[260px] sm:max-w-[330px]">
-              <img
-                src={logoSplash}
-                alt="Candy Farm - official game logo with gummy bear mascot"
-                fetchPriority="high"
-                decoding="async"
-                className="w-full min-w-0 drop-shadow-2xl"
-                style={{ filter: 'drop-shadow(0 16px 32px rgba(0,0,0,0.65))' }}
-              />
-            </div>
-
-            <p className="candy-title hero-copy-pop mt-4 max-w-lg text-3xl uppercase leading-[0.95] text-white sm:text-5xl" style={{ textShadow: '3px 4px 0 #A62B24' }}>
-              Farm hard.<br />Shoot sweet.
-            </p>
-            <p className="mt-4 max-w-md text-sm font-bold leading-relaxed text-[#D7F6E8] sm:text-base">
-              Build your candy farm, load your launcher, and defend the islands from cursed sweets in a colorful arcade adventure.
-            </p>
-          </div>
-        </div>
-
-        {/* Game download card */}
-        <div id="download" className="relative z-20 mt-6 w-full max-w-sm scroll-mt-6 px-4 lg:absolute lg:bottom-8 lg:left-1/2 lg:ml-[-12rem] lg:mt-0">
-          <div
-            className="rounded-3xl p-5"
-            style={{
-              background: 'linear-gradient(135deg, #C52C29 0%, #E34232 52%, #F28C28 100%)',
-              boxShadow: '0 14px 38px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.42)',
-            }}
-          >
-            <div className="rounded-t-2xl h-1 mb-3 mx-auto w-3/4 bg-white/25" />
-            <p className="mb-1 text-xs font-black uppercase tracking-[0.2em] text-white/75">Ready to play?</p>
-            <h2 className="candy-title mb-2 text-xl text-white">Download Candy Farm</h2>
-            <p className="mb-4 text-sm text-white/85" style={{ fontWeight: 600 }}>
-              Get the game on your Android device and start protecting the farm.
-            </p>
             <a
               href={GOOGLE_PLAY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-candy flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-base font-black text-[#7A3F00] shadow-[0_6px_0_#C07000,0_8px_16px_rgba(0,0,0,0.2)] transition-transform active:scale-95"
-              style={{ background: 'linear-gradient(180deg, #FFE45C 0%, #F2B632 100%)', textDecoration: 'none' }}
+              className="candy-wordmark rounded-full bg-[#ffcf35] px-4 py-2.5 text-xs text-[#643e16] shadow-[0_4px_0_#df951b] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 sm:px-6 sm:text-sm"
+              style={{ textDecoration: 'none' }}
             >
-              <span aria-hidden="true">▶</span>
-              Get it on Google Play
+              Play for free <span aria-hidden="true">↗</span>
             </a>
+          </nav>
+        </header>
+
+        <div className="relative z-10 mx-auto grid min-h-[760px] w-full max-w-7xl items-center gap-8 px-5 pb-24 pt-16 sm:px-8 lg:min-h-[800px] lg:grid-cols-[1.1fr_0.9fr] lg:gap-0 lg:pb-28 lg:pt-12">
+          <div className="hero-copy-pop max-w-2xl pt-5 text-center lg:pt-0 lg:text-left">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/45 bg-[#164f34]/65 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#fff4b4] shadow-lg backdrop-blur-sm sm:text-xs">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#ffcf35]" />
+              Your next happy place
+            </div>
+            <h1 className="candy-title max-w-2xl text-5xl uppercase leading-[0.94] text-white drop-shadow-[0_4px_0_rgba(50,91,39,0.8)] sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
+              A little farm.<br />
+              <span className="candy-title-gradient">A lot of fun.</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-lg text-base font-extrabold leading-relaxed text-white drop-shadow-[0_2px_8px_rgba(13,47,34,0.7)] sm:text-lg lg:mx-0">
+              Step into a world made of wonder. Collect sweet surprises, take on playful challenges, and explore a farm that’s bursting with color.
+            </p>
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+              <a
+                href={GOOGLE_PLAY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-candy inline-flex items-center justify-center gap-2 rounded-full bg-[#ffcc36] px-7 py-4 text-sm font-black text-[#593d18] shadow-[0_6px_0_#d98b21,0_12px_24px_rgba(29,52,24,0.26)] transition-transform hover:-translate-y-1 active:translate-y-1 sm:text-base"
+                style={{ textDecoration: 'none' }}
+              >
+                <span aria-hidden="true">▶</span> Play on Google Play
+              </a>
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/70 bg-white/15 px-7 py-4 text-sm font-black text-white backdrop-blur-sm transition-colors hover:bg-white/25 sm:text-base"
+                style={{ textDecoration: 'none' }}
+              >
+                Explore the farm <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-black uppercase tracking-wider text-white drop-shadow sm:text-sm lg:justify-start">
+              <span>🍬 Collect</span>
+              <span className="text-[#ffda4e]">✦</span>
+              <span>🌱 Grow</span>
+              <span className="text-[#ffda4e]">✦</span>
+              <span>🎯 Play</span>
+            </div>
+          </div>
+
+          <div className="relative mx-auto flex w-full max-w-[400px] items-center justify-center lg:justify-end">
+            <div className="community-ring absolute left-4 top-8 h-20 w-20 rounded-full border-[12px] border-[#ffe567]/80 lg:left-10" />
+            <div className="float-anim relative z-10 w-[min(55vw,245px)] rotate-[4deg] rounded-[2.3rem] border-[7px] border-[#fff5d7] bg-[#fff5d7] p-1.5 shadow-[0_28px_70px_rgba(14,56,39,0.45)] sm:w-[245px]">
+              <div className="overflow-hidden rounded-[1.7rem]">
+                <img
+                  src={screenshotA}
+                  alt="A peek at the Candy Farm game"
+                  loading="eager"
+                  decoding="async"
+                  className="aspect-[9/19] w-full object-cover"
+                />
+              </div>
+            </div>
+            <div className="absolute -bottom-1 left-0 z-20 -rotate-3 rounded-2xl border-2 border-white/80 bg-[#ff765b] px-4 py-3 text-white shadow-xl sm:left-4">
+              <p className="candy-title text-sm uppercase sm:text-base">Ready, set, sweet!</p>
+              <p className="text-[10px] font-extrabold text-white/85 sm:text-xs">A colorful arcade adventure</p>
+            </div>
+            <div className="wiggle absolute -right-1 top-12 z-20 grid h-14 w-14 place-items-center rounded-full border-4 border-white bg-[#ffcb36] text-3xl shadow-lg sm:-right-2 sm:h-16 sm:w-16">🍭</div>
           </div>
         </div>
 
-        {/* scroll hint */}
-        <div className="mt-6 mb-8 flex flex-col items-center gap-1">
-          <p className="text-white/60 text-xs font-600" style={{ fontWeight: 600 }}>Scroll to discover</p>
-          <div className="scroll-hint text-white/50 text-lg">↓</div>
-        </div>
+        <div className="absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-[#f8f0d2]/75 to-transparent" />
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────────────── */}
       <section
         id="how-it-works"
-        className="py-14 px-4"
-        style={{ background: 'radial-gradient(circle at 15% 15%, rgba(244,185,66,0.14), transparent 22%), linear-gradient(180deg, #173D38 0%, #0C2224 100%)' }}
+        className="relative overflow-hidden px-4 py-16 sm:py-20"
+        style={{ background: 'radial-gradient(circle at 10% 10%, rgba(255,217,61,0.23), transparent 22%), linear-gradient(180deg, #fff9e8 0%, #e5f9e9 100%)' }}
       >
         {/* section label */}
         <div className="flex justify-center mb-2">
           <span
-            className="px-5 py-1.5 rounded-full text-xs font-800 uppercase tracking-widest"
+            className="rounded-full px-5 py-1.5 text-xs font-800 uppercase tracking-widest"
             style={{
               fontWeight: 800,
-              background: 'rgba(255,255,255,0.2)',
-              color: 'white',
+              background: '#e7f2d6',
+              color: '#518340',
               letterSpacing: '0.12em',
             }}
           >
@@ -202,16 +200,16 @@ export default function App() {
           </span>
         </div>
         <h2
-          className="candy-title text-center text-white text-2xl mb-10 leading-tight"
+          className="candy-title mb-10 text-center text-3xl leading-tight text-[#24513a] sm:text-4xl"
           style={{
             fontWeight: 900,
-            textShadow: '0 3px 10px rgba(0,80,0,0.3)',
+            textShadow: '0 2px 0 rgba(255,255,255,0.8)',
           }}
         >
           Pick your weapon.<br /><span className="candy-title-gradient">Protect the farm.</span>
         </h2>
 
-        <div className="flex flex-col gap-4 max-w-sm mx-auto">
+        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
           {[
             {
               emoji: '🌱',
@@ -242,8 +240,8 @@ export default function App() {
               key={step}
               className="rounded-3xl p-5 flex items-start gap-4 relative overflow-hidden"
               style={{
-                background: 'rgba(255,255,255,0.95)',
-                boxShadow: `0 8px 24px ${shadow}, 0 2px 0 rgba(255,255,255,0.8) inset`,
+                background: 'rgba(255,255,255,0.92)',
+                boxShadow: `0 10px 30px ${shadow}, 0 2px 0 rgba(255,255,255,0.8) inset`,
               }}
             >
               {/* step number watermark */}
@@ -278,12 +276,12 @@ export default function App() {
           ))}
         </div>
 
-        <div className="armory-glow relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl border border-[#FF5948]/70 bg-[#102B2B]/90 px-5 pb-5 pt-6 shadow-[0_18px_50px_rgba(0,0,0,0.45)]">
-          <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#E34232] via-[#F4B942] to-[#37D5D0]" />
+        <div className="armory-glow relative mx-auto mt-12 max-w-5xl overflow-hidden rounded-3xl border border-[#7dbf68] bg-[#285f43] px-5 pb-5 pt-6 shadow-[0_18px_50px_rgba(41,94,57,0.24)]">
+          <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#ff6b72] via-[#f4b942] to-[#37cbb7]" />
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[#F4B942]">Choose your class</p>
-              <h3 className="candy-title mt-1 text-2xl uppercase text-white">Loadout ready</h3>
+              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[#ffe16a]">Pick your favourite</p>
+              <h3 className="candy-title mt-1 text-2xl uppercase text-white">Sweet shooters</h3>
             </div>
             <span className="hidden border border-[#E34232]/60 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#FF887D] sm:block">3 launchers unlocked</span>
           </div>
@@ -308,27 +306,27 @@ export default function App() {
       {/* ── SCREENSHOTS CAROUSEL ─────────────────────────────── */}
       <section
         id="gameplay"
-        className="py-14 overflow-hidden"
-        style={{ background: 'radial-gradient(circle at 80% 12%, rgba(244,185,66,0.2), transparent 18%), linear-gradient(180deg, #291518 0%, #111B27 50%, #082C37 100%)' }}
+        className="overflow-hidden py-16 sm:py-20"
+        style={{ background: 'radial-gradient(circle at 80% 10%, rgba(255,211,91,0.34), transparent 20%), linear-gradient(180deg, #fff0ce 0%, #fff9e9 48%, #e5f8e9 100%)' }}
       >
         <div className="flex justify-center mb-2">
           <span
-            className="px-5 py-1.5 rounded-full text-xs font-800 uppercase tracking-widest"
+            className="rounded-full px-5 py-1.5 text-xs font-800 uppercase tracking-widest"
             style={{
               fontWeight: 800,
-              background: 'rgba(255,255,255,0.2)',
-              color: 'white',
+              background: '#e1f1d9',
+              color: '#4f8343',
               letterSpacing: '0.12em',
             }}
           >
-            BATTLE FEED
+            GAMEPLAY PREVIEW
           </span>
         </div>
         <h2
-          className="candy-title text-center text-white text-2xl mb-8 px-4"
-          style={{ fontWeight: 900, textShadow: '0 3px 10px rgba(80,0,100,0.4)' }}
+          className="candy-title mb-8 px-4 text-center text-3xl text-[#285b3e] sm:text-4xl"
+          style={{ fontWeight: 900, textShadow: '0 2px 0 rgba(255,255,255,0.8)' }}
         >
-          The farm is under fire.
+          Take a peek inside Candy Farm.
         </h2>
 
         {/* Carousel */}
@@ -348,8 +346,8 @@ export default function App() {
                 aspectRatio: '9/19',
                 boxShadow:
                   i === carouselIdx
-                    ? '0 16px 48px rgba(0,0,0,0.5), 0 0 0 3px rgba(255,107,157,0.8)'
-                    : '0 8px 24px rgba(0,0,0,0.3)',
+                    ? '0 16px 42px rgba(57,89,57,0.24), 0 0 0 4px rgba(255,107,157,0.85)'
+                    : '0 8px 24px rgba(57,89,57,0.16)',
                 transform: i === carouselIdx ? 'scale(1)' : 'scale(0.92)',
               }}
             >
@@ -368,7 +366,8 @@ export default function App() {
         <div className="flex items-center justify-center gap-4 mt-6">
           <button
             onClick={() => scrollCarousel(-1)}
-            className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-900 hover:bg-white/30 active:scale-90 transition-all"
+            aria-label="Previous screenshot"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c704d] font-900 text-white transition-all hover:bg-[#1c583b] active:scale-90"
             style={{ fontWeight: 900 }}
           >
             ‹
@@ -378,15 +377,16 @@ export default function App() {
           </div>
           <button
             onClick={() => scrollCarousel(1)}
-            className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-900 hover:bg-white/30 active:scale-90 transition-all"
+            aria-label="Next screenshot"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2c704d] font-900 text-white transition-all hover:bg-[#1c583b] active:scale-90"
             style={{ fontWeight: 900 }}
           >
             ›
           </button>
         </div>
 
-        <p className="text-center text-white/50 text-xs mt-3 font-600" style={{ fontWeight: 600 }}>
-          Swipe to explore · More levels coming soon
+        <p className="mt-3 text-center text-xs font-700 text-[#648269]" style={{ fontWeight: 700 }}>
+          Swipe through the sweet little world
         </p>
       </section>
 
